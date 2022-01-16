@@ -5,6 +5,10 @@
     "microblog": {
       "type": "motoko",
       "main": "src/microblog/main.mo"
+    },
+    "microblog2": {
+      "type": "motoko",
+      "main": "src/microblog/main.mo"
     }
   },
   "defaults": {
