@@ -1,9 +1,13 @@
 import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Principal "mo:base/Principal";
+import Time "mo:base/Time";
 
 actor {
-    public type Message = Text;
+    type Message = {
+        text: Text;
+        time: Time.Time;
+    };
 
     public type Microblog = actor {
         follow: shared (Principal) -> async ();
@@ -21,11 +25,20 @@ actor {
         List.toArray(followed);
     };
 
+
     stable var messages : List.List<Message> = List.nil();
-    public shared(callMsg) func post(msg: Message) :async () {
+
+    public shared(callMsg) func post(text: Text) :async () {
         assert(Principal.toText(callMsg.caller) == "dijc6-cn3hx-74neg-6jzms-rpmgu-avaep-sb7b2-3ltoy-dew5m-bixtf-dae");
+
+        let msg = { 
+            text = text;
+            time = Time.now();
+        };
         messages := List.push(msg, messages);
     };
+
+
     public shared query func posts() :async [Message]{
         List.toArray(messages);
     };
