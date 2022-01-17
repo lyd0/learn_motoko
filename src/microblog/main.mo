@@ -2,7 +2,6 @@ import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
-
 actor {
     type Message = {
         text: Text;
@@ -13,7 +12,7 @@ actor {
         follow: shared (Principal) -> async ();
         follows: shared query () -> async [Principal];
         post: shared (Text) -> async ();
-        posts: shared query () -> async [Message];
+        posts: shared query (Time.Time) -> async [Message];
         timeline: shared () -> async [Message];
     };
 
@@ -38,17 +37,17 @@ actor {
         messages := List.push(msg, messages);
     };
 
-
-    public shared query func posts() :async [Message]{
-        List.toArray(messages);
+    public shared query func posts(since: Time.Time) :async [Message]{
+        let isSinceTime = func (msg: Message) : Bool {  msg.time > since };
+        List.toArray(List.filter(messages, isSinceTime));
     };
 
-    public shared func timeline() :async [Message]{
+    public shared func timeline(since: Time.Time) :async [Message]{
         var feeds : List.List<Message> = List.nil();
 
         for (canisterId in Iter.fromList(followed)) {
             let canister : Microblog = actor(Principal.toText(canisterId));
-            let msgs = await canister.posts();
+            let msgs = await canister.posts(since);
             for(msg in Iter.fromArray(msgs)) {
                 feeds := List.push(msg, feeds);
             }
