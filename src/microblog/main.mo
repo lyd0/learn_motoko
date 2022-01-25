@@ -28,7 +28,7 @@ actor {
     stable var messages : List.List<Message> = List.nil();
 
     public shared(callMsg) func post(text: Text) :async () {
-        assert(Principal.toText(callMsg.caller) == "dijc6-cn3hx-74neg-6jzms-rpmgu-avaep-sb7b2-3ltoy-dew5m-bixtf-dae");
+        // assert(Principal.toText(callMsg.caller) == "dijc6-cn3hx-74neg-6jzms-rpmgu-avaep-sb7b2-3ltoy-dew5m-bixtf-dae");
 
         let msg = { 
             text = text;
